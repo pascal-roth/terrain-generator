@@ -134,11 +134,12 @@ class IndoorNavigationPattern(MeshPattern):
 
 @dataclass
 class IndoorNavigationPatternLevels(MeshPattern):
-    dim: Tuple[float, float, float] = (2.0, 2.0, 2.0)  # x, y, z
+    dim: Tuple[float, float, float] = (6.0, 6.0, 6.0)  # x, y, z
     seed: int = 1234
     levels: Tuple[float, ...] = (0.0, 0.5, 1.0, 1.5, 2.0)
     wall_height: float = 3.0
     mesh_parts: Tuple[MeshPartsCfg, ...] = ()
+    border_width: float = 1.0
 
     def __post_init__(self):
         cfgs = ()

@@ -45,12 +45,13 @@ from terrain_generator.trimesh_tiles.mesh_parts.basic_parts import create_from_h
 class OverhangingTerrainPattern(MeshPattern):
     dim: Tuple[float, float, float] = (2.0, 2.0, 2.0)  # x, y, z
     seed: int = 1234
+    border_width: float = 1.0
 
     enable_wall: bool = False
 
     # random box platform
     random_cfgs = []
-    n_random_boxes: int = 10
+    n_random_boxes: int = 15
     random_box_weight: float = 0.01
     perlin_weight: float = 0.1
     for i in range(n_random_boxes):

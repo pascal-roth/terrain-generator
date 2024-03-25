@@ -123,6 +123,7 @@ class MeshPattern:
     # name: str
     dim: Tuple[float, float, float] = (2.0, 2.0, 2.0)  # x, y, z
     mesh_parts: Tuple[MeshPartsCfg, ...] = (MeshPartsCfg(),)
+    border_width: float = 1.0
 
 
 @dataclass

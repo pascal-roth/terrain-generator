@@ -2,6 +2,8 @@
 # Copyright (c) 2023, Takahiro Miki. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for details.
 #
+from __future__ import annotations
+
 import os
 import argparse
 import numpy as np
@@ -182,6 +184,13 @@ def create_mesh_from_cfg(
                     result_overhanging_mesh += over_mesh
                 bar()
 
+    # # add border wall to the mesh
+    # bbox = result_mesh.bounding_box.bounds
+    # bbox_dim = np.sum(np.abs(bbox), axis=0)
+    # border_size = (bbox_dim[0] + 2 * cfg.border_width, bbox_dim[1] + 2 * cfg.border_width)
+    # border_center = (np.mean(bbox[:, 0]), np.mean(bbox[:, 1]), 0.5)
+    # result_mesh += trimesh.util.concatenate(make_border(border_size, [bbox_dim[0], bbox_dim[1]], height=3.0, position=border_center))
+
     bbox = result_mesh.bounding_box.bounds
     print("bbox = ", bbox)
     # Get the center of the bounding box.
@@ -226,13 +235,65 @@ def create_mesh_from_cfg(
         visualize_mesh(result_mesh)
 
 
+def make_border(
+    size: tuple[float, float], inner_size: tuple[float, float], height: float, position: tuple[float, float, float]
+) -> list[trimesh.Trimesh]:
+    """Generate meshes for a rectangular border with a hole in the middle.
+
+    .. code:: text
+
+        +---------------------+
+        |#####################|
+        |##+---------------+##|
+        |##|               |##|
+        |##|               |##| length
+        |##|               |##| (y-axis)
+        |##|               |##|
+        |##+---------------+##|
+        |#####################|
+        +---------------------+
+              width (x-axis)
+
+    Args:
+        size: The length (along x) and width (along y) of the terrain (in m).
+        inner_size: The inner length (along x) and width (along y) of the hole (in m).
+        height: The height of the border (in m).
+        position: The center of the border (in m).
+
+    Returns:
+        A list of trimesh.Trimesh objects that represent the border.
+    """
+    # compute thickness of the border
+    thickness_x = (size[0] - inner_size[0]) / 2.0
+    thickness_y = (size[1] - inner_size[1]) / 2.0
+    # generate tri-meshes for the border
+    # top/bottom border
+    box_dims = (size[0], thickness_y, height)
+    # -- top
+    box_pos = (position[0], position[1] + inner_size[1] / 2.0 + thickness_y / 2.0, position[2])
+    box_mesh_top = trimesh.creation.box(box_dims, trimesh.transformations.translation_matrix(box_pos))
+    # -- bottom
+    box_pos = (position[0], position[1] - inner_size[1] / 2.0 - thickness_y / 2.0, position[2])
+    box_mesh_bottom = trimesh.creation.box(box_dims, trimesh.transformations.translation_matrix(box_pos))
+    # left/right border
+    box_dims = (thickness_x, inner_size[1], height)
+    # -- left
+    box_pos = (position[0] - inner_size[0] / 2.0 - thickness_x / 2.0, position[1], position[2])
+    box_mesh_left = trimesh.creation.box(box_dims, trimesh.transformations.translation_matrix(box_pos))
+    # -- right
+    box_pos = (position[0] + inner_size[0] / 2.0 + thickness_x / 2.0, position[1], position[2])
+    box_mesh_right = trimesh.creation.box(box_dims, trimesh.transformations.translation_matrix(box_pos))
+    # return the tri-meshes
+    return [box_mesh_left, box_mesh_right, box_mesh_top, box_mesh_bottom]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create mesh from configuration")
     parser.add_argument(
         "--cfg",
         type=str,
         choices=["indoor", "overhanging", "overhanging_floor"],
-        default="indoor",
+        default="overhanging",
         help="Which configuration to use",
     )
     parser.add_argument("--over_cfg", action="store_true", help="Whether to use overhanging configuration")
@@ -260,7 +321,7 @@ if __name__ == "__main__":
     else:
         over_cfg = None
 
-    for i in range(10):
+    for i in range(12):
         mesh_prefix = f"{args.mesh_name}_{i}"
         create_mesh_from_cfg(
             cfg,
