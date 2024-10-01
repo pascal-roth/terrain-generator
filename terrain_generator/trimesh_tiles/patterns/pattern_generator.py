@@ -26,9 +26,62 @@ from ..mesh_parts.mesh_parts_cfg import (
 def generate_walls(dim, wall_height=3.0, wall_thickness=0.4):
     load_from_cache = True
     cfgs = (
-        WallPartsCfg(
-            name=f"floor", dim=dim, wall_height=wall_height, wall_thickness=wall_thickness, wall_edges=(), weight=13.0
-        ),
+        # WallPartsCfg(
+        #     name=f"floor", dim=dim, wall_height=wall_height, wall_thickness=wall_thickness, wall_edges=(), weight=13.0
+        # ),
+        # WallPartsCfg(
+        #     name=f"wall_s_{wall_height}",
+        #     dim=dim,
+        #     wall_height=wall_height,
+        #     wall_thickness=wall_thickness,
+        #     wall_edges=("middle_left", "middle_right"),
+        #     rotations=(90, 180, 270),
+        #     flips=(),
+        #     weight=0.2,
+        #     load_from_cache=load_from_cache,
+        # ),
+        # WallPartsCfg(
+        #     name=f"wall_t_{wall_height}",
+        #     dim=dim,
+        #     wall_height=wall_height,
+        #     wall_thickness=wall_thickness,
+        #     wall_edges=("middle_left", "middle_bottom"),
+        #     rotations=(90, 180, 270),
+        #     flips=(),
+        #     weight=0.2,
+        #     load_from_cache=load_from_cache,
+        # ),
+        # WallPartsCfg(
+        #     name=f"door_s_{wall_height}",
+        #     dim=dim,
+        #     wall_height=wall_height,
+        #     wall_thickness=wall_thickness,
+        #     wall_edges=("middle_left", "middle_right"),
+        #     rotations=(90, 180, 270),
+        #     flips=(),
+        #     weight=0.1,
+        #     door_direction="up",
+        #     create_door=True,
+        #     load_from_cache=load_from_cache,
+        # ),
+        # WallPartsCfg(
+        #     name=f"wall_s_e_{wall_height}",
+        #     dim=dim,
+        #     wall_height=wall_height,
+        #     wall_thickness=wall_thickness,
+        #     wall_edges=("left",),
+        #     rotations=(90, 180, 270),
+        #     flips=(),
+        #     weight=0.1,
+        #     load_from_cache=load_from_cache,
+        # ),
+    )
+    return cfgs
+
+
+def generate_walls_fdm(dim, wall_height=3.0, wall_thickness=0.4):
+    load_from_cache = True
+    cfgs = (
         WallPartsCfg(
             name=f"wall_s_{wall_height}",
             dim=dim,
@@ -37,7 +90,7 @@ def generate_walls(dim, wall_height=3.0, wall_thickness=0.4):
             wall_edges=("middle_left", "middle_right"),
             rotations=(90, 180, 270),
             flips=(),
-            weight=2.0,
+            weight=0.2,
             load_from_cache=load_from_cache,
         ),
         WallPartsCfg(
@@ -48,7 +101,8 @@ def generate_walls(dim, wall_height=3.0, wall_thickness=0.4):
             wall_edges=("middle_left", "middle_bottom"),
             rotations=(90, 180, 270),
             flips=(),
-            weight=1.0,
+            weight=0.2,
+            create_door=True,
             load_from_cache=load_from_cache,
         ),
         WallPartsCfg(
@@ -72,7 +126,8 @@ def generate_walls(dim, wall_height=3.0, wall_thickness=0.4):
             wall_edges=("left",),
             rotations=(90, 180, 270),
             flips=(),
-            weight=0.1,
+            weight=0.2,
+            create_door=True,
             load_from_cache=load_from_cache,
         ),
     )

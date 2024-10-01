@@ -26,7 +26,7 @@ from terrain_generator.trimesh_tiles.mesh_parts.mesh_parts_cfg import (
 from terrain_generator.trimesh_tiles.mesh_parts.overhanging_parts import get_cfg_gen
 
 from configs.navigation_cfg import IndoorNavigationPatternLevels
-from configs.overhanging_cfg import OverhangingTerrainPattern, OverhangingPattern, OverhangingFloorPattern
+from configs.overhanging_cfg import OverhangingTerrainPattern, OverhangingPattern, OverhangingFloorPattern, OverhangingTerrainPatternRampPlatform, OverhangingTerrainPatternStairs, OverhangingTerrainPatternPerlinSteppingStones, OverhangingTerrainEasy
 from terrain_generator.navigation.mesh_terrain import MeshTerrain, MeshTerrainCfg
 from alive_progress import alive_bar
 
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     if args.cfg == "indoor":
         cfg = IndoorNavigationPatternLevels(wall_height=3.0)
     elif args.cfg == "overhanging":
-        cfg = OverhangingTerrainPattern()
+        cfg = OverhangingTerrainEasy()
     elif args.cfg == "overhanging_floor":
         cfg = OverhangingFloorPattern()
     else:
